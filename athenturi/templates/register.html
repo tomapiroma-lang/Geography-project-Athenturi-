@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}რეგისტრაცია — ათენტური{% endblock %}
+{% block content %}
+<section class="auth">
+  <div class="auth-photo" style="--bg:url('{{ url_for('static', filename='img/plaka-monastiraki.jpg') }}')"><p>საბერძნეთი გელოდებათ.</p></div>
+  <div class="auth-form">
+    <h1>რეგისტრაცია</h1><p class="muted">შექმენით ანგარიში, რომ თქვენი მოთხოვნები ერთ ადგილას გქონდეთ.</p>
+    <form method="post" novalidate>{{ csrf_input() }}
+      <div class="field"><label for="name">სახელი</label><input id="name" name="name" value="{{ form.get('name','') }}" autocomplete="name" required>{% if errors.name %}<small class="err">{{ errors.name }}</small>{% endif %}</div>
+      <div class="field"><label for="email">ელფოსტა</label><input id="email" name="email" type="email" value="{{ form.get('email','') }}" autocomplete="email" required>{% if errors.email %}<small class="err">{{ errors.email }}</small>{% endif %}</div>
+      <div class="field"><label for="password">პაროლი</label><div class="pw"><input id="password" name="password" type="password" autocomplete="new-password" required><button type="button" class="pw-toggle" aria-label="პაროლის ჩვენება">👁</button></div>{% if errors.password %}<small class="err">{{ errors.password }}</small>{% endif %}</div>
+      <div class="field"><label for="password2">გაიმეორეთ პაროლი</label><div class="pw"><input id="password2" name="password2" type="password" autocomplete="new-password" required><button type="button" class="pw-toggle" aria-label="პაროლის ჩვენება">👁</button></div>{% if errors.password2 %}<small class="err">{{ errors.password2 }}</small>{% endif %}</div>
+      <button class="btn btn-primary btn-lg btn-block" type="submit">ანგარიშის შექმნა</button>
+    </form>
+    <p class="muted">უკვე გაქვთ ანგარიში? <a href="{{ url_for('auth.login') }}">შესვლა</a></p>
+  </div>
+</section>
+{% endblock %}

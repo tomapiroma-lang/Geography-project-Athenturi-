@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}შესვლა — ათენტური{% endblock %}
+{% block content %}
+<section class="auth">
+  <div class="auth-photo" style="--bg:url('{{ url_for('static', filename='img/hydra.jpg') }}')"><p>კეთილი იყოს თქვენი დაბრუნება.</p></div>
+  <div class="auth-form">
+    <h1>შესვლა</h1><p class="muted">შეიყვანეთ ელფოსტა და პაროლი.</p>
+    <form method="post" novalidate>{{ csrf_input() }}
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <div class="field"><label for="email">ელფოსტა</label><input id="email" name="email" type="email" value="{{ form.get('email','') }}" autocomplete="email" required></div>
+      <div class="field"><label for="password">პაროლი</label><div class="pw"><input id="password" name="password" type="password" autocomplete="current-password" required><button type="button" class="pw-toggle" aria-label="პაროლის ჩვენება">👁</button></div></div>
+      <button class="btn btn-primary btn-lg btn-block" type="submit">შესვლა</button>
+    </form>
+    <p class="muted">ანგარიში არ გაქვთ? <a href="{{ url_for('auth.register') }}">რეგისტრაცია</a></p>
+  </div>
+</section>
+{% endblock %}

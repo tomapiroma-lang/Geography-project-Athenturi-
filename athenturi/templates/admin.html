@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}ადმინი — ათენტური{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><p class="kicker">ადმინისტრატორი</p><h1>მოთხოვნები</h1><p>{{ items|length }} ბოლო ჩანაწერი</p></div></section>
+<section class="section"><div class="container"><div class="table-wrap"><table class="table">
+  <thead><tr><th>თარიღი</th><th>სახელი და კონტაქტი</th><th>ტიპი</th><th>ტური</th><th>ჯამი</th><th>შეტყობინება</th><th>სტატუსი</th><th></th></tr></thead>
+  <tbody>{% for i in items %}<tr>
+    <td>{{ i.created_at.strftime('%d.%m.%Y %H:%M') }}</td>
+    <td>{{ i.name }}<br><a href="mailto:{{ i.email }}">{{ i.email }}</a>{% if i.phone %}<br>{{ i.phone }}{% endif %}</td>
+    <td>{{ 'შეძენა' if i.kind == 'purchase' else 'შეკითხვა' }}</td>
+    <td>{% if i.tour %}{{ i.tour.title }} × {{ i.tickets }}{% else %}—{% endif %}</td>
+    <td>{% if i.total %}€{{ i.total }}{% else %}—{% endif %}</td>
+    <td class="msg">{{ i.message or '—' }}</td>
+    <td><span class="pill pill-{{ i.status }}">{{ i.status_label }}</span></td>
+    <td class="actions">
+      {% if i.status == 'new' %}<form method="post" action="{{ url_for('admin.update', inquiry_id=i.id, action='confirm') }}">{{ csrf_input() }}<button class="btn btn-primary btn-sm">დადასტურება</button></form>{% endif %}
+      {% if i.status != 'cancelled' %}<form method="post" action="{{ url_for('admin.update', inquiry_id=i.id, action='cancel') }}">{{ csrf_input() }}<button class="btn btn-outline btn-sm">გაუქმება</button></form>{% endif %}
+    </td></tr>{% endfor %}</tbody>
+</table></div></div></section>
+{% endblock %}

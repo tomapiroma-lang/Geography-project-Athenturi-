@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}ათენტური — ტურები საბერძნეთში ქართულად{% endblock %}</title>
+<meta name="description" content="{% block desc %}ათენტური ატარებს ქართულენოვან ტურებს მხოლოდ საბერძნეთში: ათენი, მეტეორა, სარონული კუნძულები და კრეტა.{% endblock %}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.desc() }}">
+<meta property="og:image" content="{{ url_for('static', filename='img/' ~ (og_image or 'acropolis') ~ '.jpg', _external=True) }}">
+<meta name="theme-color" content="#071f45">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Noto+Sans+Georgian:wght@300;400;500;600&family=Noto+Serif+Georgian:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="{{ url_for('static', filename='js/boot.js') }}"></script>
+</head>
+<body class="{% block body_class %}{% endblock %}">
+{% set ep = request.endpoint or '' %}
+<header class="site-header" id="siteHeader">
+  <div class="container nav">
+    <a class="brand" href="{{ url_for('main.index') }}"><img src="{{ url_for('static', filename='img/logo-small.png') }}" alt="" width="51" height="46"><span>ათენტური</span></a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu" aria-label="მენიუ"><span></span><span></span><span></span></button>
+    <nav class="nav-menu" id="navMenu" aria-label="მთავარი მენიუ">
+      <a href="{{ url_for('main.index') }}" class="{{ 'active' if ep == 'main.index' }}">მთავარი</a>
+      <a href="{{ url_for('tours.index') }}" class="{{ 'active' if ep.startswith('tours.') }}">ტურები</a>
+      <a href="{{ url_for('main.about') }}" class="{{ 'active' if ep == 'main.about' }}">ჩვენ შესახებ</a>
+      <a href="{{ url_for('contact.index') }}" class="{{ 'active' if ep == 'contact.index' }}">კონტაქტი</a>
+      <div class="nav-auth">
+        {% if user %}
+          <a class="nav-user" href="{{ url_for('account.index') }}">{{ user.name }}</a>
+          {% if is_admin %}<a class="nav-user" href="{{ url_for('admin.index') }}">ადმინი</a>{% endif %}
+          <form method="post" action="{{ url_for('auth.logout') }}">{{ csrf_input() }}<button class="btn btn-outline btn-sm" type="submit">გასვლა</button></form>
+        {% else %}
+          <a class="btn btn-outline btn-sm" href="{{ url_for('auth.login') }}">შესვლა</a>
+          <a class="btn btn-primary btn-sm" href="{{ url_for('auth.register') }}">რეგისტრაცია</a>
+        {% endif %}
+      </div>
+    </nav>
+  </div>
+</header>
+
+{% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}
+<div class="container flash-wrap" role="status">
+  {% for cat, msg in messages %}<div class="flash flash-{{ cat }}">{{ msg }}<button class="flash-close" type="button" aria-label="დახურვა">×</button></div>{% endfor %}
+</div>
+{% endif %}{% endwith %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<footer class="site-footer">
+  <div class="meander"></div>
+  <div class="container footer-grid">
+    <div>
+      <a class="brand brand-light" href="{{ url_for('main.index') }}"><img src="{{ url_for('static', filename='img/logo-small.png') }}" alt="" width="51" height="46"><span>ათენტური</span></a>
+      <p>ქართულენოვანი ტურები მხოლოდ საბერძნეთში — პატარა ჯგუფებით და გამჭვირვალე ფასებით.</p>
+    </div>
+    <div><h4>გვერდები</h4>
+      <a href="{{ url_for('tours.index') }}">ტურები</a><a href="{{ url_for('main.about') }}">ჩვენ შესახებ</a><a href="{{ url_for('contact.index') }}">კონტაქტი</a>
+    </div>
+    <div><h4>რეგიონები</h4>
+      <a href="{{ url_for('tours.index') }}#athens">ათენი</a><a href="{{ url_for('tours.index') }}#meteora">მეტეორა</a><a href="{{ url_for('tours.index') }}#saronic">სარონული კუნძულები</a><a href="{{ url_for('tours.index') }}#crete">კრეტა</a>
+    </div>
+    <div><h4>კონტაქტი</h4>
+      <a href="mailto:{{ site_email }}">{{ site_email }}</a><a href="tel:{{ site_phone|replace(' ', '') }}">{{ site_phone }}</a>
+    </div>
+  </div>
+  <div class="container footer-bottom"><span>© <span id="year">2026</span> ათენტური</span><span>საბერძნეთი ქართულად</span></div>
+</footer>
+
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/effects.js') }}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

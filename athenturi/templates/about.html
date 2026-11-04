@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}ჩვენ შესახებ — ათენტური{% endblock %}
+{% block content %}
+<section class="page-hero" style="--bg:url('{{ url_for('static', filename='img/acropolis-museum.jpg') }}')">
+  <div class="container"><p class="kicker">ჩვენ შესახებ</p><h1>საბერძნეთი, ქართულად</h1><p>ისტორია იმის შესახებ, თუ როგორ დაიბადა ათენტური.</p></div>
+</section>
+<section class="section">
+  <div class="container about-grid">
+    <div class="prose reveal">
+      <h2>ერთი ზაფხულიდან დაწყებული</h2>
+      <p>ათენტური ერთი მოგზაურობიდან დაიწყო. ქართველი მეგობრები ათენში ვმოგზაურობდით და ვერ ვიპოვეთ ტური, რომელიც ქართულად მოგვიყვებოდა საბერძნეთის ისტორიას და ბილეთებისა თუ გადაადგილების გამო თავს არ გვაწუხებდა.</p>
+      <p>ამიტომ გადავწყვიტეთ, თვითონ შეგვექმნა ის, რასაც ვეძებდით: პატარა ჯგუფები, გამოცდილი გიდები და გამჭვირვალე ფასები. დღეს ვმუშაობთ მხოლოდ საბერძნეთზე, ამიტომ ყველა მარშრუტი ჩვენთვის ნაცნობია.</p>
+      <h2>რატომ ვართ კარგი არჩევანი</h2>
+      <ul class="checklist">
+        <li>ყველა გიდი ქართულად გესაუბრებათ</li>
+        <li>ერთ ქვეყანაზე ვმუშაობთ და მას საფუძვლიანად ვიცნობთ</li>
+        <li>ჯგუფი მაქსიმუმ 15 კაცია</li>
+        <li>ფასში რა შედის, ყოველთვის წერია ტურის გვერდზე</li>
+      </ul>
+    </div>
+    <figure class="about-photo reveal"><img src="{{ url_for('static', filename='img/ancient-agora-sm.jpg') }}" alt="" loading="lazy" width="900" height="675"></figure>
+  </div>
+</section>
+<section class="section section-alt">
+  <div class="narrow">
+    <header class="section-head reveal"><p class="kicker">როგორ მუშაობს</p><h2>ოთხი მარტივი ნაბიჯი</h2></header>
+    <ol class="timeline">
+      <li class="reveal"><strong>აირჩიეთ ტური</strong><span>ნახეთ ფასი, ხანგრძლივობა და ბილეთების რაოდენობა.</span></li>
+      <li class="reveal"><strong>გამოგვიგზავნეთ მოთხოვნა</strong><span>კონტაქტის გვერდზე აირჩიეთ „ტურის შეძენა“ და მიუთითეთ ბილეთების რაოდენობა.</span></li>
+      <li class="reveal"><strong>დაგიკავშირდებით</strong><span>ბილეთები დაჯავშნილია; დეტალებსა და გადახდაზე გიპასუხებთ.</span></li>
+      <li class="reveal"><strong>ისიამოვნეთ ტურით</strong><span>გიდი დაგხვდებათ შეთანხმებულ ადგილას და დანარჩენს თავად იზრუნებს.</span></li>
+    </ol>
+    <div class="center"><a class="btn btn-primary btn-lg" href="{{ url_for('tours.index') }}">ტურების ნახვა</a></div>
+  </div>
+</section>
+{% endblock %}

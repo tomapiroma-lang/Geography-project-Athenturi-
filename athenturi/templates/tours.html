@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% from "_macros.html" import tour_card, icon %}
+{% block title %}ტურები — ათენტური{% endblock %}
+{% block desc %}ყველა ტური საბერძნეთში: ათენი, მეტეორა, სარონული კუნძულები და კრეტა. ფასები და ბილეთების რაოდენობა.{% endblock %}
+{% block content %}
+<section class="page-hero" style="--bg:url('{{ url_for('static', filename='img/plaka-monastiraki.jpg') }}')">
+  <div class="container"><p class="kicker">ტურები</p><h1>აირჩიეთ მარშრუტი</h1><p>გახსენით რეგიონი და ნახეთ ტურები, ფასები და ბილეთების რაოდენობა.</p></div>
+</section>
+<section class="section">
+  <div class="narrow-wide">
+    <div class="legend">
+      <span class="badge badge-available">{{ status_labels['available'] }}</span>
+      <span class="badge badge-few">{{ status_labels['few'] }}</span>
+      <span class="badge badge-sold">{{ status_labels['sold'] }}</span>
+    </div>
+    {% for r in regions %}
+    <div class="dropdown" id="{{ r.slug }}">
+      <button class="dropdown-head" type="button" aria-expanded="false" aria-controls="panel-{{ r.slug }}">
+        <span class="dropdown-title">
+          <img class="dropdown-thumb" src="{{ url_for('static', filename='img/' ~ r.image ~ '-sm.jpg') }}" alt="" width="64" height="64" loading="lazy">
+          <span><strong>{{ r.name }}</strong><small>{{ r.tagline }}</small></span>
+        </span>
+        <span class="dropdown-side"><span class="muted">{{ r.tours|length }} ტური</span><span class="chevron" aria-hidden="true">⌄</span></span>
+      </button>
+      <div class="dropdown-panel" id="panel-{{ r.slug }}" hidden>
+        <div class="card-grid">{% for t in r.tours %}{{ tour_card(t) }}{% endfor %}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/tours.js') }}" defer></script>{% endblock %}

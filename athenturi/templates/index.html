@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% from "_macros.html" import tour_card, icon %}
+{% set slides = [
+  dict(img='acropolis', pos='50% 60%', region='athens', kicker='ათენი', title='იქ, სადაც ყველაფერი დაიწყო', text='აკროპოლისი, ძველი აგორა და პლაკის ვიწრო ქუჩები — ქართულენოვან გიდთან ერთად.'),
+  dict(img='meteora-monasteries', pos='50% 40%', region='meteora', kicker='მეტეორა', title='მონასტრები ცასა და მიწას შორის', text='კლდის მწვერვალებზე აგებული ექვსი მოქმედი მონასტერი.'),
+  dict(img='aegina', pos='50% 55%', region='saronic', kicker='სარონული კუნძულები', title='ერთი დღე ზღვაზე', text='ეგინა, ჰიდრა და პოროსი — ათენიდან ნავით ახლოს.'),
+  dict(img='crete-explorer', pos='50% 50%', region='crete', kicker='კრეტა', title='მზე, ზღვა და მინოსური ისტორია', text='საბერძნეთის უდიდესი კუნძული ერთ მარშრუტში.')
+] %}
+{% block content %}
+<section class="hero" data-slider data-interval="7000" aria-roledescription="კარუსელი" aria-label="მთავარი სლაიდები">
+  <h1 class="visually-hidden">ათენტური — ტურები საბერძნეთში ქართულად</h1>
+  {% for s in slides %}
+  <article class="slide{{ ' is-active' if loop.first }}" aria-roledescription="სლაიდი" aria-label="{{ loop.index }} / {{ slides|length }}">
+    <img src="{{ url_for('static', filename='img/' ~ s.img ~ '.jpg') }}" alt="" style="object-position:{{ s.pos }}" {% if not loop.first %}loading="lazy"{% endif %}>
+    <div class="slide-shade"></div>
+    <div class="container slide-copy">
+      <p class="kicker">{{ s.kicker }}</p>
+      <h2>{{ s.title }}</h2>
+      <p class="lead">{{ s.text }}</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold btn-lg" href="{{ url_for('tours.index') }}#{{ s.region }}">ტურების ნახვა {{ icon('arrow') }}</a>
+        <a class="btn btn-glass btn-lg" href="{{ url_for('contact.index') }}">დაგვიკავშირდით</a>
+      </div>
+    </div>
+  </article>
+  {% endfor %}
+  <div class="container hero-ui">
+    <div class="hero-count"><b data-current>01</b><span> / 0{{ slides|length }}</span></div>
+    <div class="hero-dots">{% for s in slides %}<button type="button" class="dot{{ ' is-active' if loop.first }}" aria-label="სლაიდი {{ loop.index }}"><i></i></button>{% endfor %}</div>
+    <div class="hero-arrows"><button type="button" data-prev aria-label="წინა">{{ icon('left') }}</button><button type="button" data-next aria-label="შემდეგი">{{ icon('arrow') }}</button></div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container stats-grid">
+    <div class="reveal"><b data-count="{{ regions|length }}">0</b><span>რეგიონი</span></div>
+    <div class="reveal" style="--d:.1s"><b data-count="{{ tours|length }}">0</b><span>მარშრუტი</span></div>
+    <div class="reveal" style="--d:.2s"><b data-count="15">0</b><span>მგზავრი ჯგუფში მაქსიმუმ</span></div>
+    <div class="reveal" style="--d:.3s"><b data-count="1">0</b><span>ქვეყანა, სრული ყურადღებით</span></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <header class="section-head reveal"><p class="kicker">მიმართულებები</p><h2>აირჩიეთ თქვენი საბერძნეთი</h2><p>ოთხი რეგიონი, ყველა ქართულ ენაზე.</p></header>
+    <div class="tiles">
+      {% for r in regions %}
+      <a class="tile reveal" style="--d:{{ (loop.index0 * 0.1)|round(1) }}s" href="{{ url_for('tours.index') }}#{{ r.slug }}">
+        <img src="{{ url_for('static', filename='img/' ~ r.image ~ '-sm.jpg') }}" alt="" loading="lazy" width="900" height="1200">
+        <div class="tile-shade"></div>
+        <div class="tile-copy"><h3>{{ r.name }}</h3><p>{{ r.tagline }}</p><span class="tile-count">{{ r.tours|length }} მარშრუტი {{ icon('arrow') }}</span></div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt" data-carousel>
+  <div class="container">
+    <header class="section-head section-head-row reveal">
+      <div><p class="kicker">ტურები</p><h2>პოპულარული მარშრუტები</h2></div>
+      <div class="hero-arrows dark"><button type="button" data-carousel-prev aria-label="წინა">{{ icon('left') }}</button><button type="button" data-carousel-next aria-label="შემდეგი">{{ icon('arrow') }}</button></div>
+    </header>
+  </div>
+  <div class="carousel-track">
+    <div class="carousel-pad"></div>
+    {% for t in tours %}<div class="carousel-item reveal" style="--d:{{ (loop.index0 * 0.05)|round(2) }}s">{{ tour_card(t) }}</div>{% endfor %}
+    <div class="carousel-pad"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <header class="section-head reveal"><p class="kicker">რატომ ათენტური</p><h2>მოგზაურობა, რომელიც გამოგადგებათ</h2></header>
+    <div class="features">
+      <div class="feature reveal"><span class="feature-icon">{{ icon('compass') }}</span><h3>ქართულენოვანი გიდები</h3><p>ისტორიას, მითებსა და პრაქტიკულ რჩევებს მშობლიურ ენაზე გიყვებით.</p></div>
+      <div class="feature reveal" style="--d:.1s"><span class="feature-icon">{{ icon('users') }}</span><h3>პატარა ჯგუფები</h3><p>მაქსიმუმ 15 მგზავრი — გიდი თითოეულს გაიგონებთ და ფოტოსაც მშვიდად გადაიღებთ.</p></div>
+      <div class="feature reveal" style="--d:.2s"><span class="feature-icon">{{ icon('tag') }}</span><h3>გამჭვირვალე ფასი</h3><p>ტურის გვერდზე წერია, რა შედის ფასში. დამალული გადასახადი არ არის.</p></div>
+      <div class="feature reveal" style="--d:.3s"><span class="feature-icon">{{ icon('shield') }}</span><h3>მხოლოდ საბერძნეთი</h3><p>ერთ ქვეყანაზე ვმუშაობთ, ამიტომ ყველა მარშრუტს ახლოდან ვიცნობთ.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="band-bg" data-parallax style="background-image:url('{{ url_for('static', filename='img/plaka-monastiraki.jpg') }}')"></div>
+  <div class="container band-copy reveal"><blockquote>ჩვენ მხოლოდ საბერძნეთზე ვმუშაობთ — ამიტომ ვიცნობთ მას საფუძვლიანად.</blockquote></div>
+</section>
+
+<section class="section">
+  <div class="narrow">
+    <header class="section-head reveal"><p class="kicker">კითხვები</p><h2>ხშირად დასმული კითხვები</h2></header>
+    <div class="faq reveal">
+      <details><summary>როგორ ვიყიდო ტური?</summary><p>აირჩიეთ ტური, დააჭირეთ ღილაკს „ტურის შეძენა“ და გამოგვიგზავნეთ მოთხოვნა. ბილეთებს დაგიჯავშნით, ჩვენ კი დასადასტურებლად დაგიკავშირდებით.</p></details>
+      <details><summary>ტურები ქართულად ტარდება?</summary><p>დიახ, ყველა ტურს ქართულენოვანი გიდი ახლავს.</p></details>
+      <details><summary>რას ნიშნავს „დარჩა ცოტა ადგილი“?</summary><p>ეს ნიშნავს, რომ ტურზე ხუთი ან ნაკლები ადგილია დარჩენილი.</p></details>
+      <details><summary>შემიძლია მოთხოვნის გაუქმება?</summary><p>დიახ, მოგვწერეთ ტურის დაწყებამდე — მოთხოვნას გავაუქმებთ და ბილეთები ისევ გახდება ხელმისაწვდომი.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="meander meander-top"></div>
+  <div class="container reveal">
+    <h2>მზად ხართ საბერძნეთისთვის?</h2>
+    <p>აირჩიეთ ტური ან გვკითხეთ — დაგეხმარებით მარშრუტის შერჩევაში.</p>
+    <div class="hero-cta center-row">
+      <a class="btn btn-gold btn-lg" href="{{ url_for('tours.index') }}">ტურების დაწყება</a>
+      {% if not user %}<a class="btn btn-glass btn-lg" href="{{ url_for('auth.login') }}">შესვლა</a><a class="btn btn-glass btn-lg" href="{{ url_for('auth.register') }}">რეგისტრაცია</a>{% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/slider.js') }}" defer></script>{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}ჩემი მოთხოვნები — ათენტური{% endblock %}
+{% block content %}
+<section class="page-hero" style="--bg:url('{{ url_for('static', filename='img/poros.jpg') }}')">
+  <div class="container"><p class="kicker">ანგარიში</p><h1>გამარჯობა, {{ user.name }}</h1><p>აქ ჩანს თქვენი შეკითხვები და ტურების შეძენის მოთხოვნები.</p></div>
+</section>
+<section class="section"><div class="container">
+  {% if items %}
+  <div class="table-wrap"><table class="table">
+    <thead><tr><th>თარიღი</th><th>ტიპი</th><th>ტური</th><th>ბილეთები</th><th>ჯამი</th><th>სტატუსი</th></tr></thead>
+    <tbody>{% for i in items %}<tr>
+      <td>{{ i.created_at.strftime('%d.%m.%Y') }}</td><td>{{ 'შეძენა' if i.kind == 'purchase' else 'შეკითხვა' }}</td>
+      <td>{% if i.tour %}<a href="{{ url_for('tours.detail', slug=i.tour.slug) }}">{{ i.tour.title }}</a>{% else %}—{% endif %}</td>
+      <td>{{ i.tickets or '—' }}</td><td>{% if i.total %}€{{ i.total }}{% else %}—{% endif %}</td>
+      <td><span class="pill pill-{{ i.status }}">{{ i.status_label }}</span></td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}
+  <div class="empty"><h2>ჯერ მოთხოვნები არ გაქვთ</h2><p class="muted">აირჩიეთ ტური და გამოგვიგზავნეთ პირველი მოთხოვნა.</p><a class="btn btn-primary" href="{{ url_for('tours.index') }}">ტურების ნახვა</a></div>
+  {% endif %}
+</div></section>
+{% endblock %}

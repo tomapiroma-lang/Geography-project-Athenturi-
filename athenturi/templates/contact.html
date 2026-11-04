@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from "_macros.html" import icon %}
+{% block title %}კონტაქტი — ათენტური{% endblock %}
+{% block content %}
+<section class="page-hero" style="--bg:url('{{ url_for('static', filename='img/aegina.jpg') }}')">
+  <div class="container"><p class="kicker">კონტაქტი</p><h1>მოგვწერეთ</h1><p>დასვით შეკითხვა ან გამოგვიგზავნეთ ტურის შეძენის მოთხოვნა.</p></div>
+</section>
+<section class="section">
+  <div class="container contact-grid">
+    <form class="form-card reveal" method="post" action="{{ url_for('contact.index') }}" novalidate>
+      {{ csrf_input() }}
+      <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <div class="field"><label for="kind">რა გჭირდებათ?</label>
+        <select id="kind" name="kind"><option value="question" {{ 'selected' if form.kind != 'purchase' }}>შეკითხვა</option><option value="purchase" {{ 'selected' if form.kind == 'purchase' }}>ტურის შეძენა</option></select></div>
+      <div class="field-row">
+        <div class="field"><label for="name">სახელი</label><input id="name" name="name" value="{{ form.name }}" maxlength="80" autocomplete="name" required>{% if errors.name %}<small class="err">{{ errors.name }}</small>{% endif %}</div>
+        <div class="field"><label for="email">ელფოსტა</label><input id="email" name="email" type="email" value="{{ form.email }}" maxlength="120" autocomplete="email" required>{% if errors.email %}<small class="err">{{ errors.email }}</small>{% endif %}</div>
+      </div>
+      <div class="field"><label for="phone">ტელეფონი (არასავალდებულო)</label><input id="phone" name="phone" type="tel" value="{{ form.phone }}" maxlength="30" autocomplete="tel">{% if errors.phone %}<small class="err">{{ errors.phone }}</small>{% endif %}</div>
+
+      <div id="purchaseFields" {{ 'hidden' if form.kind != 'purchase' }}>
+        <div class="field-row">
+          <div class="field"><label for="tourSelect">ტური</label>
+            <select id="tourSelect" name="tour"><option value="">— აირჩიეთ ტური —</option>
+              {% for t in tours %}<option value="{{ t.slug }}" data-price="{{ t.price }}" data-left="{{ t.tickets_left }}" {{ 'selected' if form.tour == t.slug }} {{ 'disabled' if t.tickets_left <= 0 }}>{{ t.title }} — €{{ t.price }}{{ ' (ამოიწურა)' if t.tickets_left <= 0 }}</option>{% endfor %}
+            </select>{% if errors.tour %}<small class="err">{{ errors.tour }}</small>{% endif %}</div>
+          <div class="field"><label for="tickets">ბილეთები</label><input id="tickets" name="tickets" type="number" min="1" max="10" value="{{ form.tickets or 1 }}">{% if errors.tickets %}<small class="err">{{ errors.tickets }}</small>{% endif %}</div>
+        </div>
+        <div class="total" id="totalBox" hidden><span>ჯამური ფასი</span><b id="totalVal">€0</b></div>
+      </div>
+
+      <div class="field"><label for="message" id="messageLabel">თქვენი შეკითხვა</label><textarea id="message" name="message" rows="5" maxlength="2000">{{ form.message }}</textarea>{% if errors.message %}<small class="err">{{ errors.message }}</small>{% endif %}</div>
+      <button class="btn btn-primary btn-lg btn-block" id="submitBtn" type="submit">გაგზავნა</button>
+    </form>
+    <aside class="contact-side reveal">
+      <figure><img src="{{ url_for('static', filename='img/hydra-sm.jpg') }}" alt="" loading="lazy" width="900" height="1200"></figure>
+      <ul class="contact-list">
+        <li>{{ icon('mail') }}<a href="mailto:{{ site_email }}">{{ site_email }}</a></li>
+        <li>{{ icon('phone') }}<a href="tel:{{ site_phone|replace(' ', '') }}">{{ site_phone }}</a></li>
+        <li>{{ icon('clock') }}<span>ვპასუხობთ 24 საათში</span></li>
+      </ul>
+    </aside>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/contact.js') }}" defer></script>{% endblock %}

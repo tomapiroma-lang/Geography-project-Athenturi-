@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% from "_macros.html" import tour_card, badge, icon %}
+{% set og_image = t.image %}
+{% block title %}{{ t.title }} — ათენტური{% endblock %}
+{% block desc %}{{ t.summary }}{% endblock %}
+{% block content %}
+<section class="place-hero">
+  <img src="{{ url_for('static', filename='img/' ~ t.image ~ '.jpg') }}" alt="{{ t.title }}" data-parallax>
+  <div class="slide-shade"></div>
+  <div class="container place-hero-copy">
+    <a class="crumb" href="{{ url_for('tours.index') }}#{{ t.region.slug }}">{{ icon('left') }} {{ t.region.name }}</a>
+    <h1>{{ t.title }}</h1>
+    <p class="lead">{{ t.summary }}</p>
+  </div>
+</section>
+<section class="section">
+  <div class="container place-grid">
+    <div class="place-main">
+      <ul class="facts reveal">
+        <li>{{ icon('clock') }}<span>ხანგრძლივობა<b>{{ t.duration }}</b></span></li>
+        <li>{{ icon('users') }}<span>ჯგუფი<b>მაქსიმუმ 15 კაცი</b></span></li>
+        <li>{{ icon('compass') }}<span>ენა<b>ქართული</b></span></li>
+      </ul>
+      <div class="prose reveal">{% for p in t.paragraphs %}<p>{{ p }}</p>{% endfor %}</div>
+      <div class="two-col reveal">
+        <div><h2 class="h3">რას ნახავთ</h2><ul class="checklist">{% for h in t.highlight_list %}<li>{{ h }}</li>{% endfor %}</ul></div>
+        <div><h2 class="h3">ფასში შედის</h2><ul class="checklist">{% for h in t.include_list %}<li>{{ h }}</li>{% endfor %}</ul></div>
+      </div>
+    </div>
+    <aside class="book-card reveal">
+      {{ badge(t) }}
+      <div class="price big">€{{ t.price }} <small>ერთ ადამიანზე</small></div>
+      {% if t.status == 'few' %}<p class="muted">დარჩენილია მხოლოდ {{ t.tickets_left }} ადგილი.</p>{% endif %}
+      {% if t.status == 'sold' %}
+        <span class="btn btn-disabled btn-block btn-lg" aria-disabled="true">ბილეთები ამოიწურა</span>
+        <a class="btn btn-outline btn-block" href="{{ url_for('contact.index') }}">მომლოდინეთა სიისთვის მოგვწერეთ</a>
+      {% else %}
+        <a class="btn btn-gold btn-block btn-lg" href="{{ url_for('contact.index', kind='purchase', tour=t.slug) }}">ტურის შეძენა</a>
+        <a class="btn btn-outline btn-block" href="{{ url_for('contact.index') }}">დაგვისვით შეკითხვა</a>
+      {% endif %}
+      <p class="fine">მოთხოვნის გაგზავნის შემდეგ ბილეთებს დაგიჯავშნით და დასადასტურებლად დაგიკავშირდებით.</p>
+    </aside>
+  </div>
+</section>
+<section class="section section-alt">
+  <div class="container">
+    <header class="section-head reveal"><p class="kicker">გაგრძელება</p><h2>სხვა ტურებიც ნახეთ</h2></header>
+    <div class="card-grid">{% for r in related %}<div class="reveal" style="--d:{{ (loop.index0 * 0.1)|round(1) }}s">{{ tour_card(r) }}</div>{% endfor %}</div>
+  </div>
+</section>
+{% endblock %}
